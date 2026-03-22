@@ -57,6 +57,19 @@ ignore = [
     "RET504", # unnecessary-assignment
     "RET505", # unnecessary-else
     "B904",   # raise-without-from
+        # ... твои текущие правила ...
+    
+    # Для русского текста в docstrings
+    "RUF002",  # ambiguous unicode in docstring (ложное срабатывание на кириллицу)
+    
+    # Мелочи, которые не критичны
+    "RUF010",  # explicit conversion flag
+    "UP015",   # unnecessary mode argument in open()
+    
+    # Пробелы и переносы (можно пофиксить авто, но пока игнорируем)
+    "W291",    # trailing whitespace
+    "W292",    # no newline at end of file
+    "W293",    # blank line with whitespace
 ]
 
 

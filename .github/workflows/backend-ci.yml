@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         # Используем стабильную версию; если нужен 3.14 — раскомментируй allow-prereleases
-        python-version: ["3.12"]  # или ["3.14"] с allow-prereleases: true ниже
+        python-version: ["3.14"]  # или ["3.14"] с allow-prereleases: true ниже
 
     steps:
     - name: Checkout code

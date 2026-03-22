@@ -25,7 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.14"]
+        # Используем стабильную версию; если нужен 3.14 — раскомментируй allow-prereleases
+        python-version: ["3.12"]  # или ["3.14"] с allow-prereleases: true ниже
 
     steps:
     - name: Checkout code
@@ -35,47 +36,50 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        # allow-prereleases: true  # Раскомментируй, если используешь "3.14"
 
     - name: Install Poetry
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         echo "$HOME/.local/bin" >> $GITHUB_PATH
+        echo "POETRY_NO_INTERACTION=1" >> $GITHUB_ENV
 
     - name: Configure Poetry
-      run: |
-        poetry config virtualenvs.create false
+      run: poetry config virtualenvs.create false
 
+    # === УСТАНОВКА ЗАВИСИМОСТЕЙ (без --only, чтобы не было ошибок) ===
     - name: Install dependencies (graph module)
       working-directory: graph
-      run: poetry install --only main,dev --no-root
+      run: poetry install --no-root
 
     - name: Install dependencies (parser module)
       working-directory: parser
-      run: poetry install --only main --no-root
+      run: poetry install --no-root
 
     - name: Install dependencies (ecosystem_analyzer)
       working-directory: ecosystem_analyzer
-      run: poetry install --only main,dev --no-root
+      run: poetry install --no-root
 
+    # === ЛИНТИНГ (запуск из корня, чтобы пути работали) ===
     - name: Run Ruff linting
-      working-directory: graph
-      run: poetry run ruff check . ../ecosystem_analyzer ../parser
+      run: poetry -C graph run ruff check graph/ ecosystem_analyzer/ parser/
 
     - name: Run Ruff format check
-      working-directory: graph
-      run: poetry run ruff format --check . ../ecosystem_analyzer ../parser
+      run: poetry -C graph run ruff format --check graph/ ecosystem_analyzer/ parser/
 
+    # === ТЕСТЫ С ПОКРЫТИЕМ ===
     - name: Run tests with coverage
       working-directory: graph
       run: |
         poetry run pytest \
-          --cov=graph \
-          --cov=ecosystem_analyzer \
-          --cov=parser \
+          --cov=./graph \
+          --cov=../ecosystem_analyzer \
+          --cov=../parser \
           --cov-report=xml \
           --cov-report=term-missing \
           -v
 
+    # === CODECOV (опционально — для публичных репо токен не нужен) ===
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
@@ -83,10 +87,13 @@ jobs:
         flags: backend
         name: backend-coverage
         fail_ci_if_error: false
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}  # Добавь в Settings → Secrets для приватных репо
 
-    - name: Generate coverage badge (optional)
+    # === БЕЙДЖ ПОКРЫТИЯ (только для main) ===
+    - name: Generate coverage report
       if: github.ref == 'refs/heads/main'
       working-directory: graph
       run: |
         poetry run coverage report -m > coverage_report.txt
-        echo "Coverage report generated"
+        echo "✅ Coverage report generated"

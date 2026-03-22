@@ -60,12 +60,14 @@ jobs:
       working-directory: ecosystem_analyzer
       run: poetry install --no-root
 
-    # === ЛИНТИНГ (запуск из корня, чтобы пути работали) ===
+    # === ЛИНТИНГ (исправленные пути) ===
     - name: Run Ruff linting
-      run: poetry -C graph run ruff check graph/ ecosystem_analyzer/ parser/
+      working-directory: graph
+      run: poetry run ruff check . ../ecosystem_analyzer ../parser
 
     - name: Run Ruff format check
-      run: poetry -C graph run ruff format --check graph/ ecosystem_analyzer/ parser/
+      working-directory: graph
+      run: poetry run ruff format --check . ../ecosystem_analyzer ../parser
 
     # === ТЕСТЫ С ПОКРЫТИЕМ ===
     - name: Run tests with coverage

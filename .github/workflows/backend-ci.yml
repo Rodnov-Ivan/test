@@ -25,74 +25,57 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # ⚠️ Если 3.14 не найдётся — замени на "3.12"
-        python-version: ["3.14"]
+        python-version: [ "3.14" ]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        # allow-prereleases: true  # Раскомментируй, если нужна 3.14
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install Poetry
-      run: |
-        # ✅ Убраны лишние пробелы в URL
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        echo "POETRY_NO_INTERACTION=1" >> $GITHUB_ENV
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          echo "POETRY_NO_INTERACTION=1" >> $GITHUB_ENV
 
-    - name: Configure Poetry (no virtualenvs for CI)
-      run: poetry config virtualenvs.create false
+      - name: Configure Poetry
+        run: poetry config virtualenvs.create false
 
-    # === УСТАНОВКА ЗАВИСИМОСТЕЙ ===
-    - name: Install dependencies (graph module)
-      working-directory: graph
-      run: poetry install --with dev --no-root
+      - name: Install dependencies (graph module)
+        working-directory: graph
+        run: poetry install --with dev --no-root
 
-    - name: Install dependencies (parser module)
-      working-directory: parser
-      run: poetry install --no-root
+      - name: Install dependencies (parser module)
+        working-directory: parser
+        run: poetry install --no-root
 
-    - name: Install dependencies (ecosystem_analyzer)
-      working-directory: ecosystem_analyzer
-      run: poetry install --no-root
+      - name: Install dependencies (ecosystem_analyzer)
+        working-directory: ecosystem_analyzer
+        run: poetry install --no-root
 
-    # === ЛИНТИНГ (неблокирующий) ===
-    - name: Run Ruff linting
-      run: |
-        cd graph
-        poetry run ruff check . ../ecosystem_analyzer ../parser
-      continue-on-error: true  # ← Не блокировать пайплайн
+      - name: Run Ruff linting
+        run: |
+          cd graph
+          poetry run ruff check . ../ecosystem_analyzer ../parser
+        continue-on-error: true
 
-    - name: Run Ruff format check
-      run: |
-        cd graph
-        poetry run ruff format --check . ../ecosystem_analyzer ../parser
-      continue-on-error: true  # ← Не блокировать пайплайн
+      - name: Run Ruff format check
+        run: |
+          cd graph
+          poetry run ruff format --check . ../ecosystem_analyzer ../parser
+        continue-on-error: true
 
-    # === ТЕСТЫ С ПОКРЫТИЕМ (главное!) ===
-    - name: Run tests with coverage
-      working-directory: graph
-      run: |
-        poetry run pytest \
-          --cov=./graph \
-          --cov=../ecosystem_analyzer \
-          --cov=../parser \
-          --cov-report=xml \
-          --cov-report=term-missing \
-          -v
-
-    # === CODECOV (опционально) ===
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        file: ./graph/coverage.xml
-        flags: backend
-        name: backend-coverage
-        fail_ci_if_error: false
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Run tests with coverage
+        working-directory: graph
+        run: |
+          poetry run pytest \
+            --cov=./graph \
+            --cov=../ecosystem_analyzer \
+            --cov=../parser \
+            --cov-report=xml \
+            --cov-report=term-missing \
+            -v

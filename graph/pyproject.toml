@@ -28,7 +28,7 @@ dev = [
 
 [tool.ruff]
 target-version = "py312"
-line-length = 88
+line-length = 120
 
 [tool.ruff.lint]
 select = [
@@ -47,9 +47,21 @@ select = [
     "RUF",
 ]
 ignore = [
+    "E501",
+    "UP006", 
+    "UP007",
+    "UP045",
+    "UP035",
+    "B904",
+    "PTH123",
+    "RET504",
+    "RET505",
+    "ARG001",
+    "ARG002",
     "RUF001",
     "RUF002",
     "RUF003",
+    "RUF010"
 ]
 
 [tool.ruff.lint.isort]

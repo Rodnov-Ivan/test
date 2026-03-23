@@ -47,7 +47,6 @@ select = [
     "RUF",
 ]
 ignore = [
-    "E501",
     "RUF001",
     "RUF002",
     "RUF003",

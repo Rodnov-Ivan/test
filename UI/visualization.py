@@ -12,11 +12,11 @@ def get_edge_color(edge_type: str) -> str:
 
 
 def create_graph_visualization(
-    nodes: list,
-    edges: list,
-    node_filters: list,
+    nodes: list, 
+    edges: list, 
+    node_filters: list, 
     edge_weight_thresholds: dict,
-    binary_edge_filters: dict = None,
+    binary_edge_filters: dict = None
 ) -> str:
     """Создаёт HTML-визуализацию графа с фильтрацией узлов и связей."""
     if binary_edge_filters is None:
@@ -24,40 +24,45 @@ def create_graph_visualization(
 
     filtered_nodes = [n for n in nodes if n["type"] in node_filters]
     filtered_node_ids = {n["id"] for n in filtered_nodes}
-
+    
     filtered_edges = []
     for e in edges:
         if e["type"] in binary_edge_filters and not binary_edge_filters[e["type"]]:
             continue
-
+        
         if e["source"] not in filtered_node_ids or e["target"] not in filtered_node_ids:
             continue
-
+        
         min_weight = edge_weight_thresholds.get(e["type"], 0.0)
         if e["weight"] >= min_weight:
             filtered_edges.append(e)
-
-    net = Network(height="500px", width="100%", bgcolor="#222222", font_color="white")
-
+    
+    net = Network(
+        height="500px", 
+        width="100%", 
+        bgcolor="#222222", 
+        font_color="white"
+    )
+    
     for node in filtered_nodes:
         net.add_node(
-            node["id"],
-            label=node["label"],
+            node["id"], 
+            label=node["label"], 
             title=f"{node['type']}: {node['label']}",
             color=get_node_color(node["type"]),
-            size=25,
+            size=25
         )
-
+    
     for edge in filtered_edges:
         net.add_edge(
-            edge["source"],
+            edge["source"], 
             edge["target"],
             title=f"{edge['type']} (вес: {edge['weight']})",
-            width=edge["weight"] * 4,
+            width=edge["weight"] * 4,  
             color=get_edge_color(edge["type"]),
-            dashes=edge["type"] in DASHED_EDGE_TYPES,
+            dashes=edge["type"] in DASHED_EDGE_TYPES
         )
-
+    
     net.set_options("""
     {
         "physics": {
@@ -74,5 +79,5 @@ def create_graph_visualization(
         }
     }
     """)
-
+    
     return net.generate_html()

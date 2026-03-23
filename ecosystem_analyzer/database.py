@@ -92,7 +92,7 @@ class Database:
             )
             nodes_to_create.append(node_create)
 
-        self._service.create_nodes_batch(nodes_to_create)
+        created_nodes = self._service.create_nodes_batch(nodes_to_create)
         id_map = {}
         for node in graph.nodes:
             found = self._find_nodes(

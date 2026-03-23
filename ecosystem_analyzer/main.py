@@ -10,15 +10,9 @@ from ecosystem_analyzer.parser import ParserWrapper
 
 MAX_DEPTH = 10  # Max depth of graph response TODO: remove or replace to env file
 MAX_NODES = 100  # Max nodes to return
-ALLOWED_REL_TYPES = {  # TODO: replace to env file, for parser/parser also or remove from everywhere
+ALLOWED_REL_TYPES = {  # TODO: replace to env file, for parser/parser also
     "uses",
     "used by",
-    "based on",
-    "inspired by",
-    "creator",
-    "developer",
-    "programmed in",
-    "owned by",
 }
 
 logging.basicConfig(

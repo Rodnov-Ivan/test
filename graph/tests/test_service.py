@@ -87,7 +87,9 @@ class TestGraphServiceCreateNode:
 
         mock_repo.node_exists.assert_called_once_with("TestLabel", "Test Node")
         mock_repo.create_node.assert_not_called()
-        assert "Node with label 'TestLabel' and name 'Test Node' already exists" in str(exc_info.value)
+        assert "Node with label 'TestLabel' and name 'Test Node' already exists" in str(
+            exc_info.value
+        )
 
 
 class TestGraphServiceGetNode:
@@ -323,7 +325,9 @@ class TestGraphServiceCreateRelationship:
 
         mock_repo.get_node.assert_called_once_with("non-existent-source-uid")
         mock_repo.create_relationship.assert_not_called()
-        assert "Source node with uid 'non-existent-source-uid' not found" in str(exc_info.value)
+        assert "Source node with uid 'non-existent-source-uid' not found" in str(
+            exc_info.value
+        )
 
     def test_create_relationship_target_not_found(self):
         mock_connection = Mock(spec=Neo4jConnection)
@@ -354,7 +358,9 @@ class TestGraphServiceCreateRelationship:
         mock_repo.get_node.assert_any_call("source-uid")
         mock_repo.get_node.assert_any_call("non-existent-target-uid")
         mock_repo.create_relationship.assert_not_called()
-        assert "Target node with uid 'non-existent-target-uid' not found" in str(exc_info.value)
+        assert "Target node with uid 'non-existent-target-uid' not found" in str(
+            exc_info.value
+        )
 
     def test_create_relationship_creation_failed(self):
         mock_connection = Mock(spec=Neo4jConnection)
@@ -394,8 +400,9 @@ class TestGraphServiceCreateRelationship:
         mock_repo.get_node.assert_any_call("source-uid")
         mock_repo.get_node.assert_any_call("target-uid")
         mock_repo.create_relationship.assert_called_once_with(rel_create)
-        assert "Failed to create relationship TEST_RELATIONSHIP between 'source-uid' and 'target-uid'" in str(
-            exc_info.value
+        assert (
+            "Failed to create relationship TEST_RELATIONSHIP between "
+            "'source-uid' and 'target-uid'" in str(exc_info.value)
         )
 
 
@@ -514,7 +521,9 @@ class TestGraphServiceUpdateRelationship:
 
         rel_update = RelationshipUpdate(weight=2.0)
 
-        result = service.update_relationship("source-uid", "target-uid", "TEST_RELATIONSHIP", rel_update)
+        result = service.update_relationship(
+            "source-uid", "target-uid", "TEST_RELATIONSHIP", rel_update
+        )
 
         mock_repo.update_relationship.assert_called_once_with(
             "source-uid", "target-uid", "TEST_RELATIONSHIP", rel_update
@@ -532,13 +541,16 @@ class TestGraphServiceUpdateRelationship:
         rel_update = RelationshipUpdate(weight=2.0)
 
         with pytest.raises(RelationshipNotFoundError) as exc_info:
-            service.update_relationship("source-uid", "target-uid", "NON_EXISTENT_RELATIONSHIP", rel_update)
+            service.update_relationship(
+                "source-uid", "target-uid", "NON_EXISTENT_RELATIONSHIP", rel_update
+            )
 
         mock_repo.update_relationship.assert_called_once_with(
             "source-uid", "target-uid", "NON_EXISTENT_RELATIONSHIP", rel_update
         )
-        assert "Relationship NON_EXISTENT_RELATIONSHIP from 'source-uid' to 'target-uid' not found" in str(
-            exc_info.value
+        assert (
+            "Relationship NON_EXISTENT_RELATIONSHIP from 'source-uid' to 'target-uid' "
+            "not found" in str(exc_info.value)
         )
 
 
@@ -551,9 +563,13 @@ class TestGraphServiceDeleteRelationship:
         service = GraphService(mock_connection)
         service._repo = mock_repo
 
-        result = service.delete_relationship("source-uid", "target-uid", "TEST_RELATIONSHIP")
+        result = service.delete_relationship(
+            "source-uid", "target-uid", "TEST_RELATIONSHIP"
+        )
 
-        mock_repo.delete_relationship.assert_called_once_with("source-uid", "target-uid", "TEST_RELATIONSHIP")
+        mock_repo.delete_relationship.assert_called_once_with(
+            "source-uid", "target-uid", "TEST_RELATIONSHIP"
+        )
         assert result is True
 
     def test_delete_relationship_not_found(self):
@@ -565,11 +581,16 @@ class TestGraphServiceDeleteRelationship:
         service._repo = mock_repo
 
         with pytest.raises(RelationshipNotFoundError) as exc_info:
-            service.delete_relationship("source-uid", "target-uid", "NON_EXISTENT_RELATIONSHIP")
+            service.delete_relationship(
+                "source-uid", "target-uid", "NON_EXISTENT_RELATIONSHIP"
+            )
 
-        mock_repo.delete_relationship.assert_called_once_with("source-uid", "target-uid", "NON_EXISTENT_RELATIONSHIP")
-        assert "Relationship NON_EXISTENT_RELATIONSHIP from 'source-uid' to 'target-uid' not found" in str(
-            exc_info.value
+        mock_repo.delete_relationship.assert_called_once_with(
+            "source-uid", "target-uid", "NON_EXISTENT_RELATIONSHIP"
+        )
+        assert (
+            "Relationship NON_EXISTENT_RELATIONSHIP from 'source-uid' to 'target-uid' "
+            "not found" in str(exc_info.value)
         )
 
 

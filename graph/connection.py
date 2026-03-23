@@ -61,7 +61,9 @@ def with_retry(
                     time.sleep(delay)
                     delay *= backoff_factor
 
-            raise GraphConnectionError(f"All {max_attempts} attempts failed: {last_exc}") from last_exc
+            raise GraphConnectionError(
+                f"All {max_attempts} attempts failed: {last_exc}"
+            ) from last_exc
 
         return wrapper
 

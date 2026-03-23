@@ -33,11 +33,15 @@ class GraphService:
 
     def create_node(self, data: NodeCreate) -> NodeResponse:
         if self._repo.node_exists(data.label, data.name):
-            msg = f"Node with label '{data.label}' and name '{data.name}' already exists"
+            msg = (
+                f"Node with label '{data.label}' and name '{data.name}' already exists"
+            )
             raise DuplicateNodeError(msg)
 
         node = self._repo.create_node(data)
-        logger.info("Created node: uid=%s, label=%s, name=%s", node.uid, node.label, node.name)
+        logger.info(
+            "Created node: uid=%s, label=%s, name=%s", node.uid, node.label, node.name
+        )
         return node
 
     def get_node(self, uid: str) -> NodeResponse:
@@ -81,7 +85,10 @@ class GraphService:
 
         rel = self._repo.create_relationship(data)
         if rel is None:
-            msg = f"Failed to create relationship {data.rel_type} between '{data.source_uid}' and '{data.target_uid}'"
+            msg = (
+                f"Failed to create relationship {data.rel_type} "
+                f"between '{data.source_uid}' and '{data.target_uid}'"
+            )
             raise NodeNotFoundError(msg)
 
         logger.info(
@@ -113,7 +120,10 @@ class GraphService:
     ) -> RelationshipResponse:
         rel = self._repo.update_relationship(source_uid, target_uid, rel_type, data)
         if rel is None:
-            msg = f"Relationship {rel_type} from '{source_uid}' to '{target_uid}' not found"
+            msg = (
+                f"Relationship {rel_type} from '{source_uid}' "
+                f"to '{target_uid}' not found"
+            )
             raise RelationshipNotFoundError(msg)
 
         logger.info(
@@ -132,7 +142,10 @@ class GraphService:
     ) -> bool:
         deleted = self._repo.delete_relationship(source_uid, target_uid, rel_type)
         if not deleted:
-            msg = f"Relationship {rel_type} from '{source_uid}' to '{target_uid}' not found"
+            msg = (
+                f"Relationship {rel_type} from '{source_uid}' "
+                f"to '{target_uid}' not found"
+            )
             raise RelationshipNotFoundError(msg)
 
         logger.info(

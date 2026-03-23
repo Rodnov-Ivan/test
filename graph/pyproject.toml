@@ -28,7 +28,7 @@ dev = [
 
 [tool.ruff]
 target-version = "py312"
-line-length = 120
+line-length = 88
 
 [tool.ruff.lint]
 select = [
@@ -46,32 +46,11 @@ select = [
     "PTH",
     "RUF",
 ]
-
 ignore = [
-    "E501",   # line-too-long (строки > 88 символов)
-    "UP045",  # non-pep604-annotation (Optional → X | None)
-    "UP006",  # non-pep604-annotation (List → list)
-    "UP035",  # deprecated typing imports
-    "I001",   # unsorted-imports (сортировка импортов)
-    "PTH123", # pathlib usage (open() → Path.open())
-    "RET504", # unnecessary-assignment
-    "RET505", # unnecessary-else
-    "B904",   # raise-without-from
-        # ... твои текущие правила ...
-    
-    # Для русского текста в docstrings
-    "RUF002",  # ambiguous unicode in docstring (ложное срабатывание на кириллицу)
-    
-    # Мелочи, которые не критичны
-    "RUF010",  # explicit conversion flag
-    "UP015",   # unnecessary mode argument in open()
-    
-    # Пробелы и переносы (можно пофиксить авто, но пока игнорируем)
-    "W291",    # trailing whitespace
-    "W292",    # no newline at end of file
-    "W293",    # blank line with whitespace
+    "RUF001",
+    "RUF002",
+    "RUF003",
 ]
-
 
 [tool.ruff.lint.isort]
 known-first-party = ["graph"]

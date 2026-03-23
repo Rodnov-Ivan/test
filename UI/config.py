@@ -7,37 +7,37 @@ BACKEND_TIMEOUT = int(os.getenv("BACKEND_TIMEOUT", "30"))
 
 
 EDGE_TYPES: List[str] = [
-    "USES",                   
-    "USED_BY",                 
-    "DEPENDS_ON_SOFTWARE",    
-    "BASED_ON",               
-    "INSPIRED_BY",            
-    "CREATOR",                 
-    "DEVELOPER",               
-    "PROGRAMMED_IN",          
-    "OWNED_BY",               
+    "USES",
+    "USED_BY",
+    "DEPENDS_ON_SOFTWARE",
+    "BASED_ON",
+    "INSPIRED_BY",
+    "CREATOR",
+    "DEVELOPER",
+    "PROGRAMMED_IN",
+    "OWNED_BY",
 ]
 
 
 NODE_COLORS: Dict[str, str] = {
-    "Technology": "#3572CE",   
-    "Company": "#318B1E",      
-    "Entity": "#3572CE",       
-    "License": "#FF9800",      
-    "Person": "#9C27B0",       
-    "Organization": "#607D8B", 
+    "Technology": "#3572CE",
+    "Company": "#318B1E",
+    "Entity": "#3572CE",
+    "License": "#FF9800",
+    "Person": "#9C27B0",
+    "Organization": "#607D8B",
 }
 
 EDGE_COLORS: Dict[str, str] = {
-    "USES": "#1A581C",              
-    "USED_BY": "#8DFC0F",           
-    "DEPENDS_ON_SOFTWARE": "#9C27B0",  
-    "BASED_ON": "#3F51B5",          
-    "INSPIRED_BY": "#E91E63",       
-    "CREATOR": "#2196F3",           
-    "DEVELOPER": "#00BCD4",         
-    "PROGRAMMED_IN": "#FF5722",     
-    "OWNED_BY": "#795548",          
+    "USES": "#1A581C",
+    "USED_BY": "#8DFC0F",
+    "DEPENDS_ON_SOFTWARE": "#9C27B0",
+    "BASED_ON": "#3F51B5",
+    "INSPIRED_BY": "#E91E63",
+    "CREATOR": "#2196F3",
+    "DEVELOPER": "#00BCD4",
+    "PROGRAMMED_IN": "#FF5722",
+    "OWNED_BY": "#795548",
 }
 
 EDGE_TYPE_NAMES: Dict[str, str] = {
@@ -49,7 +49,7 @@ EDGE_TYPE_NAMES: Dict[str, str] = {
     "CREATOR": "Создатель",
     "DEVELOPER": "Разработчик",
     "PROGRAMMED_IN": "Написано на",
-    "OWNED_BY": "Принадлежит"
+    "OWNED_BY": "Принадлежит",
 }
 
 NODE_TYPE_NAMES: Dict[str, str] = {
@@ -58,7 +58,7 @@ NODE_TYPE_NAMES: Dict[str, str] = {
     "Entity": "Сущность",
     "License": "Лицензия",
     "Person": "Человек",
-    "Organization": "Организация"
+    "Organization": "Организация",
 }
 
 NODE_TYPE_FILTERS: List[Tuple[str, str]] = [
@@ -67,7 +67,7 @@ NODE_TYPE_FILTERS: List[Tuple[str, str]] = [
     ("License", "🟠 Лицензия"),
     ("Person", "🟣 Человек"),
     ("Organization", "⚫ Организация"),
-    ("Entity", "🟢 Сущность"),  
+    ("Entity", "🟢 Сущность"),
 ]
 
 
@@ -78,7 +78,7 @@ NODE_TYPE_TRANSLATIONS: Dict[str, str] = {
     "License": "Лицензия",
     "Person": "Человек",
     "Organization": "Организация",
-    "Unknown": "Неизвестно"
+    "Unknown": "Неизвестно",
 }
 
 EDGE_TYPE_TRANSLATIONS: Dict[str, str] = {
@@ -90,14 +90,10 @@ EDGE_TYPE_TRANSLATIONS: Dict[str, str] = {
     "CREATOR": "Создатель",
     "DEVELOPER": "Разработчик",
     "PROGRAMMED_IN": "Написано на языке программирования",
-    "OWNED_BY": "Принадлежит"
+    "OWNED_BY": "Принадлежит",
 }
 
-WEIGHTED_EDGE_TYPES: List[str] = [
-    "USES",
-    "USED_BY",
-    "DEPENDS_ON_SOFTWARE"
-]
+WEIGHTED_EDGE_TYPES: List[str] = ["USES", "USED_BY", "DEPENDS_ON_SOFTWARE"]
 
 BINARY_EDGE_TYPES: List[str] = [
     "CREATOR",
@@ -105,13 +101,10 @@ BINARY_EDGE_TYPES: List[str] = [
     "OWNED_BY",
     "PROGRAMMED_IN",
     "BASED_ON",
-    "INSPIRED_BY"
+    "INSPIRED_BY",
 ]
 
-DASHED_EDGE_TYPES: List[str] = [
-    "INSPIRED_BY",
-    "BASED_ON"
-]
+DASHED_EDGE_TYPES: List[str] = ["INSPIRED_BY", "BASED_ON"]
 
 
 MAX_DEPTH: int = int(os.getenv("MAX_DEPTH", "3"))

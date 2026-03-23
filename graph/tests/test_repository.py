@@ -33,8 +33,7 @@ class TestGraphRepositoryInitSchema:
         repo.init_schema()
 
         expected_queries = [
-            "CREATE CONSTRAINT node_uid_unique IF NOT EXISTS "
-            "FOR (n:_Node) REQUIRE n.uid IS UNIQUE",
+            "CREATE CONSTRAINT node_uid_unique IF NOT EXISTS FOR (n:_Node) REQUIRE n.uid IS UNIQUE",
             "CREATE INDEX node_name_index IF NOT EXISTS FOR (n:_Node) ON (n.name)",
             "CREATE INDEX node_source_index IF NOT EXISTS FOR (n:_Node) ON (n.source)",
         ]
@@ -52,9 +51,7 @@ class TestGraphRepositoryClearAll:
         repo = GraphRepository(mock_connection)
         repo.clear_all()
 
-        mock_connection.execute_write.assert_called_once_with(
-            "MATCH (n) DETACH DELETE n"
-        )
+        mock_connection.execute_write.assert_called_once_with("MATCH (n) DETACH DELETE n")
 
 
 class TestGraphRepositoryGetStats:
@@ -259,9 +256,7 @@ class TestGraphRepositoryFindNodes:
 
         repo = GraphRepository(mock_connection)
 
-        node_filter = NodeFilter(
-            properties_match={"status": "active", "type": "premium"}
-        )
+        node_filter = NodeFilter(properties_match={"status": "active", "type": "premium"})
         result = repo.find_nodes(node_filter)
 
         mock_connection.execute_read.assert_called_once()
@@ -307,9 +302,7 @@ class TestGraphRepositoryFindNodes:
 
         created_after = datetime.now()
         created_before = datetime.now()
-        node_filter = NodeFilter(
-            created_after=created_after, created_before=created_before
-        )
+        node_filter = NodeFilter(created_after=created_after, created_before=created_before)
         result = repo.find_nodes(node_filter)
 
         mock_connection.execute_read.assert_called_once()
@@ -636,13 +629,9 @@ class TestGraphRepositoryUpdateRelationship:
 
         repo = GraphRepository(mock_connection)
 
-        rel_update = RelationshipUpdate(
-            weight=0.9, source="updated-source", properties={"updated_prop": "value"}
-        )
+        rel_update = RelationshipUpdate(weight=0.9, source="updated-source", properties={"updated_prop": "value"})
 
-        result = repo.update_relationship(
-            "source-uid", "target-uid", "CONNECTED_TO", rel_update
-        )
+        result = repo.update_relationship("source-uid", "target-uid", "CONNECTED_TO", rel_update)
 
         mock_connection.execute_write.assert_called_once()
         call_args = mock_connection.execute_write.call_args
@@ -676,9 +665,7 @@ class TestGraphRepositoryUpdateRelationship:
 
         rel_update = RelationshipUpdate(weight=0.9)
 
-        result = repo.update_relationship(
-            "source-uid", "target-uid", "CONNECTED_TO", rel_update
-        )
+        result = repo.update_relationship("source-uid", "target-uid", "CONNECTED_TO", rel_update)
 
         assert result is None
         mock_connection.execute_write.assert_called_once()

@@ -59,9 +59,7 @@ class TestWithRetryDecorator:
 
 class TestNeo4jConnectionInit:
     def test_init_with_default_parameters(self):
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         assert conn._uri == "bolt://localhost:7687"
         assert conn._user == "neo4j"
@@ -102,9 +100,7 @@ class TestNeo4jConnectionConnect:
         mock_driver.verify_connectivity.return_value = None
         mocker.patch("graph.connection.GraphDatabase.driver", return_value=mock_driver)
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         conn.connect()
 
@@ -117,9 +113,7 @@ class TestNeo4jConnectionConnect:
         mock_driver.verify_connectivity.return_value = None
         mocker.patch("graph.connection.GraphDatabase.driver", return_value=mock_driver)
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         conn.connect()
         first_driver = conn._driver
@@ -135,9 +129,7 @@ class TestNeo4jConnectionConnect:
         )
         mock_close = mocker.patch("graph.connection.Neo4jConnection.close")
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="wrong_password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="wrong_password")
 
         with pytest.raises(GraphConnectionError) as exc_info:
             conn.connect()
@@ -153,9 +145,7 @@ class TestNeo4jConnectionConnect:
         )
         mock_close = mocker.patch("graph.connection.Neo4jConnection.close")
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         with pytest.raises(Exception) as exc_info:
             conn.connect()
@@ -167,9 +157,7 @@ class TestNeo4jConnectionConnect:
 
 class TestNeo4jConnectionClose:
     def test_close_when_not_connected(self):
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         conn.close()
         assert conn._driver is None
@@ -178,9 +166,7 @@ class TestNeo4jConnectionClose:
         mock_driver = Mock(spec=Driver)
         mock_driver.close.return_value = None
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         conn.close()
@@ -192,9 +178,7 @@ class TestNeo4jConnectionClose:
         mock_driver = Mock(spec=Driver)
         mock_driver.close.side_effect = Exception("close failed")
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         conn.close()
@@ -207,13 +191,9 @@ class TestNeo4jConnectionContextManager:
     def test_context_manager_enter(self, mocker):
         mock_driver = Mock(spec=Driver)
         mock_driver.verify_connectivity.return_value = None
-        mock_graph_db = mocker.patch(
-            "graph.connection.GraphDatabase.driver", return_value=mock_driver
-        )
+        mock_graph_db = mocker.patch("graph.connection.GraphDatabase.driver", return_value=mock_driver)
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         with conn as returned_conn:
             assert returned_conn is conn
@@ -223,14 +203,10 @@ class TestNeo4jConnectionContextManager:
     def test_context_manager_exit(self, mocker):
         mock_driver = Mock(spec=Driver)
         mock_driver.verify_connectivity.return_value = None
-        mock_graph_db = mocker.patch(
-            "graph.connection.GraphDatabase.driver", return_value=mock_driver
-        )
+        mock_graph_db = mocker.patch("graph.connection.GraphDatabase.driver", return_value=mock_driver)
         mock_driver_close = mocker.patch.object(mock_driver, "close")
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         with conn:
             pass
@@ -244,17 +220,13 @@ class TestNeo4jConnectionDriverProperty:
     def test_driver_when_connected(self):
         mock_driver = Mock(spec=Driver)
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         assert conn.driver == mock_driver
 
     def test_driver_when_not_connected(self):
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         with pytest.raises(GraphConnectionError) as exc_info:
             _ = conn.driver
@@ -264,9 +236,7 @@ class TestNeo4jConnectionDriverProperty:
 
 class TestNeo4jConnectionIsConnectedProperty:
     def test_is_connected_when_not_connected(self):
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
 
         assert conn.is_connected is False
 
@@ -274,9 +244,7 @@ class TestNeo4jConnectionIsConnectedProperty:
         mock_driver = Mock(spec=Driver)
         mock_driver.verify_connectivity.return_value = None
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         assert conn.is_connected is True
@@ -286,9 +254,7 @@ class TestNeo4jConnectionIsConnectedProperty:
         mock_driver = Mock(spec=Driver)
         mock_driver.verify_connectivity.side_effect = Exception("connection lost")
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         assert conn.is_connected is False
@@ -301,9 +267,7 @@ class TestNeo4jConnectionSession:
         mock_driver = Mock(spec=Driver)
         mock_driver.session.return_value = mock_session
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         with conn.session() as session:
@@ -349,9 +313,7 @@ class TestNeo4jConnectionExecuteRead:
         mock_driver = Mock(spec=Driver)
         mock_driver.session.return_value = mock_session
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         query = "MATCH (n) RETURN n.name"
@@ -368,9 +330,7 @@ class TestNeo4jConnectionExecuteRead:
         mock_driver = Mock(spec=Driver)
         mock_driver.session.return_value = mock_session
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         query = "MATCH (n) RETURN n.name"
@@ -398,9 +358,7 @@ class TestNeo4jConnectionExecuteWrite:
         mock_driver = Mock(spec=Driver)
         mock_driver.session.return_value = mock_session
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         return conn, mock_session, mock_tx
@@ -435,9 +393,7 @@ class TestNeo4jConnectionExecuteWrite:
         mock_driver = Mock(spec=Driver)
         mock_driver.session.return_value = mock_session
 
-        conn = Neo4jConnection(
-            uri="bolt://localhost:7687", user="neo4j", password="password"
-        )
+        conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", password="password")
         conn._driver = mock_driver
 
         query = "CREATE (n:Test {name: $name})"

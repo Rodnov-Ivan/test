@@ -25,10 +25,7 @@ class GraphRepository:
 
     def init_schema(self) -> None:
         constraints = [
-            (
-                "CREATE CONSTRAINT node_uid_unique IF NOT EXISTS "
-                "FOR (n:_Node) REQUIRE n.uid IS UNIQUE"
-            ),
+            ("CREATE CONSTRAINT node_uid_unique IF NOT EXISTS FOR (n:_Node) REQUIRE n.uid IS UNIQUE"),
         ]
         indexes = [
             "CREATE INDEX node_name_index IF NOT EXISTS FOR (n:_Node) ON (n.name)",
@@ -42,12 +39,8 @@ class GraphRepository:
         self._conn.execute_write("MATCH (n) DETACH DELETE n")
 
     def get_stats(self) -> dict[str, int]:
-        node_count_records = self._conn.execute_read(
-            "MATCH (n:_Node) RETURN count(n) AS count"
-        )
-        rel_count_records = self._conn.execute_read(
-            "MATCH (:_Node)-[r]-(:_Node) RETURN count(r) AS count"
-        )
+        node_count_records = self._conn.execute_read("MATCH (n:_Node) RETURN count(n) AS count")
+        rel_count_records = self._conn.execute_read("MATCH (:_Node)-[r]-(:_Node) RETURN count(r) AS count")
         label_records = self._conn.execute_read(
             """
             MATCH (n:_Node)
@@ -60,12 +53,8 @@ class GraphRepository:
         )
 
         return {
-            "total_nodes": (
-                node_count_records[0]["count"] if node_count_records else 0
-            ),
-            "total_relationships": (
-                rel_count_records[0]["count"] if rel_count_records else 0
-            ),
+            "total_nodes": (node_count_records[0]["count"] if node_count_records else 0),
+            "total_relationships": (rel_count_records[0]["count"] if rel_count_records else 0),
             "labels": {r["label"]: r["count"] for r in label_records},
         }
 
@@ -200,9 +189,7 @@ class GraphRepository:
         records = self._conn.execute_read(query, {"name": name})
         return records[0]["exists"] if records else False
 
-    def create_relationship(
-        self, data: RelationshipCreate
-    ) -> RelationshipResponse | None:
+    def create_relationship(self, data: RelationshipCreate) -> RelationshipResponse | None:
         now = "datetime()"
 
         query = f"""
@@ -367,9 +354,7 @@ class GraphRepository:
                 node_conditions.append(f"({' OR '.join(label_conditions)})")
 
             if nf.name_contains:
-                node_conditions.append(
-                    "toLower(node.name) CONTAINS toLower($name_contains)"
-                )
+                node_conditions.append("toLower(node.name) CONTAINS toLower($name_contains)")
                 params["name_contains"] = nf.name_contains
 
             if nf.source:
@@ -408,9 +393,7 @@ class GraphRepository:
             path_conditions.append(f"ALL(node IN nodes(path)[1..] WHERE {conditions})")
         if rel_where_clauses:
             conditions = " AND ".join(rel_where_clauses)
-            path_conditions.append(
-                f"ALL(rel IN relationships(path) WHERE {conditions})"
-            )
+            path_conditions.append(f"ALL(rel IN relationships(path) WHERE {conditions})")
 
         where = f"WHERE {' AND '.join(path_conditions)}" if path_conditions else ""
         depth = sg_filter.depth

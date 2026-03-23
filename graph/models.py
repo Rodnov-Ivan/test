@@ -11,13 +11,9 @@ class NodeCreate(BaseModel):
         max_length=100,
         description="Node label (e.g. Technology, Company)",
     )
-    name: str = Field(
-        ..., min_length=1, max_length=500, description="Human-readable name"
-    )
+    name: str = Field(..., min_length=1, max_length=500, description="Human-readable name")
     description: str | None = Field(default=None, max_length=5000)
-    properties: dict[str, Any] = Field(
-        default_factory=dict, description="Key-value properties"
-    )
+    properties: dict[str, Any] = Field(default_factory=dict, description="Key-value properties")
     source: str | None = Field(
         default=None,
         max_length=200,
@@ -36,9 +32,7 @@ class NodeCreate(BaseModel):
 class NodeUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=500)
     description: str | None = None
-    properties: dict[str, Any] | None = Field(
-        default=None, description="Merged with existing properties"
-    )
+    properties: dict[str, Any] | None = Field(default=None, description="Merged with existing properties")
     source: str | None = None
 
 
@@ -96,15 +90,9 @@ class RelationshipResponse(BaseModel):
 
 
 class NodeFilter(BaseModel):
-    labels: list[str] | None = Field(
-        default=None, description="Filter by one or more labels"
-    )
-    name_contains: str | None = Field(
-        default=None, description="Substring search in name (case-insensitive)"
-    )
-    properties_match: dict[str, Any] | None = Field(
-        default=None, description="Exact match on property keys"
-    )
+    labels: list[str] | None = Field(default=None, description="Filter by one or more labels")
+    name_contains: str | None = Field(default=None, description="Substring search in name (case-insensitive)")
+    properties_match: dict[str, Any] | None = Field(default=None, description="Exact match on property keys")
     source: str | None = None
     created_after: datetime | None = None
     created_before: datetime | None = None
@@ -113,9 +101,7 @@ class NodeFilter(BaseModel):
 
 
 class RelationshipFilter(BaseModel):
-    rel_types: list[str] | None = Field(
-        default=None, description="Filter by relationship types"
-    )
+    rel_types: list[str] | None = Field(default=None, description="Filter by relationship types")
     weight_min: float | None = Field(default=None, ge=0.0)
     weight_max: float | None = Field(default=None, ge=0.0)
     source: str | None = None
@@ -126,12 +112,8 @@ class RelationshipFilter(BaseModel):
 class SubgraphFilter(BaseModel):
     node_filter: NodeFilter | None = None
     rel_filter: RelationshipFilter | None = None
-    center_uid: str | None = Field(
-        default=None, description="Center node uid for neighborhood extraction"
-    )
-    depth: int = Field(
-        default=1, ge=1, le=10, description="Traversal depth from center node"
-    )
+    center_uid: str | None = Field(default=None, description="Center node uid for neighborhood extraction")
+    depth: int = Field(default=1, ge=1, le=10, description="Traversal depth from center node")
     limit: int = Field(default=100, ge=1, le=10000, description="Max nodes in response")
 
 
